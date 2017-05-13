@@ -80,6 +80,7 @@ namespace OdeToFood.Api.Tests.Controllers
             //Assert
             Assert.That(viewResult, Is.Not.Null);
             Assert.That(viewResult.Model, Is.EquivalentTo(reviews));
+            _controller._apiProxyMock.Verify(proxy => proxy.GetReviewsAsync(), Times.Once);
         }
 
         [Test]
@@ -96,6 +97,7 @@ namespace OdeToFood.Api.Tests.Controllers
             //Assert
             Assert.That(viewResult, Is.Not.Null);
             Assert.That(viewResult.Model, Is.EqualTo(restaurant));
+            _controller._apiProxyMock.Verify(proxy => proxy.GetRestaurantByIdAsync(restaurant.Id), Times.Once);
         }
 
         [Test]
@@ -113,7 +115,20 @@ namespace OdeToFood.Api.Tests.Controllers
         }
 
         [Test]
-        public void Create_ValidReview_ReturnsCreatedResult()
+        public void Create_ReturnsEditView()
+        {
+            //Arrange
+
+            //Act
+            var redirectResult = _controller.Create() as ViewResult;
+
+            //Assert
+            Assert.That(redirectResult, Is.Not.Null);
+            Assert.That(redirectResult.ViewBag.Title, Is.EqualTo("New Review"));
+        }
+
+        [Test]
+        public void Create_ValidReview_ReturnsRedirectToRouteResult()
         {
             //Arrange
             var review = new ReviewBuilder().Build();
@@ -121,10 +136,99 @@ namespace OdeToFood.Api.Tests.Controllers
                 .Returns(Task.FromResult<bool>(true));
 
             //Act
-            //var actionResult = _controller.Create(review).Result as Http
+            var redirectResult = _controller.Create(review).Result as RedirectToRouteResult;
 
             //Assert
+            Assert.That(redirectResult, Is.Not.Null);
+            Assert.That(redirectResult.Permanent, Is.False);
+            Assert.That(redirectResult.RouteValues["Action"], Is.EqualTo("Index"));
+            _controller._apiProxyMock.Verify(proxy => proxy.PostReviewAsync(review), Times.Once);
         }
+
+        [Test]
+        public void Create_InvalidReview_ReturnsBadRequest()
+        {
+            //Arrange
+            _controller._apiProxyMock.Setup(proxy => proxy.PostReviewAsync(It.IsAny<Review>()))
+                .Returns(Task.FromResult<bool>(false));
+
+            //Act
+            var redirectResult = _controller.Create(new Review()).Result as HttpStatusCodeResult;
+
+            //Assert
+            Assert.That(redirectResult, Is.Not.Null);
+            Assert.That(redirectResult.StatusCode, Is.EqualTo(400));
+            Assert.That(redirectResult.StatusDescription, Is.EqualTo("Bad Request: Invalid review"));
+        }
+
+        [Test]
+        public void Edit_ValidId_ReturnsEditView()
+        {
+            //Arrange
+            var review = new ReviewBuilder().WithId().Build();
+            _controller._apiProxyMock.Setup(proxy => proxy.GetReviewByIdAsync(review.Id)).Returns(Task.FromResult<Review>(review));
+
+            //Act
+            var viewResult = _controller.Edit(review.Id).Result as ViewResult;
+
+            //Assert
+            Assert.That(viewResult, Is.Not.Null);
+            Assert.That(viewResult.Model, Is.EqualTo(review));
+            _controller._apiProxyMock.Verify(proxy => proxy.GetReviewByIdAsync(review.Id), Times.Once);
+        }
+
+        [Test]
+        public void Edit_InvalidId_ReturnsBadRequest()
+        {
+            //Arrange
+            _controller._apiProxyMock.Setup(proxy => proxy.GetReviewByIdAsync(It.IsAny<int>())).Returns(Task.FromResult<Review>(null));
+
+            //Act
+            var viewResult = _controller.Edit(new Random().Next(1,int.MaxValue)).Result as HttpStatusCodeResult;
+
+            //Assert
+            Assert.That(viewResult, Is.Not.Null);
+            Assert.That(viewResult.StatusCode, Is.EqualTo(400));
+            Assert.That(viewResult.StatusDescription, Is.EqualTo("Bad Request: Review not found"));
+            _controller._apiProxyMock.Verify(proxy => proxy.GetReviewByIdAsync(It.IsAny<int>()), Times.Once);
+        }
+
+        [Test]
+        public void Edit_ValidIdAndValidReview_ReturnsRedirectToRouteResult()
+        {
+            //Arrange
+            var review = new ReviewBuilder().WithId().Build();
+            _controller._apiProxyMock.Setup(proxy => proxy.PutReviewAsync(review.Id, review))
+                .Returns(Task.FromResult<bool>(true));
+
+            //Act
+            var redirectResult = _controller.Edit(review.Id, review).Result as RedirectToRouteResult;
+
+            //Assert
+            Assert.That(redirectResult, Is.Not.Null);
+            Assert.That(redirectResult.Permanent, Is.False);
+            Assert.That(redirectResult.RouteValues["Action"], Is.EqualTo("Index"));
+            _controller._apiProxyMock.Verify(proxy => proxy.PutReviewAsync(review.Id, review), Times.Once);
+        }
+
+        [Test]
+        public void Edit_InvalidIdAndOrInvalidReview_ReturnsBedRequest()
+        {
+            //Arrange
+            _controller._apiProxyMock.Setup(proxy => proxy.PutReviewAsync(It.IsAny<int>(), It.IsAny<Review>()))
+                .Returns(Task.FromResult<bool>(false));
+
+            //Act
+            var redirectResult = _controller.Edit(new Random().Next(1,int.MaxValue), new Review()).Result as HttpStatusCodeResult;
+
+            //Assert
+            Assert.That(redirectResult, Is.Not.Null);
+            Assert.That(redirectResult.StatusCode, Is.EqualTo(400));
+            Assert.That(redirectResult.StatusDescription, Is.EqualTo("Bad Request: Invalid review"));
+            _controller._apiProxyMock.Verify(proxy => proxy.PutReviewAsync(It.IsAny<int>(), It.IsAny<Review>()), Times.Once);
+        }
+
+        // TODO: Tests for delete method
 
         private class TestableHomeController : HomeController
         {

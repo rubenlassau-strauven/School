@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http.Results;
@@ -54,22 +55,32 @@ namespace OdeToFood.Api.Controllers
 
         public ActionResult Create()
         {
-            return null;
+            ViewBag.Title = "New Review";
+            return View("Edit");
         }
 
         public async Task<ActionResult> Create(Review review)
         {
-            return null;
+            var postSucceeded = await _apiProxy.PostReviewAsync(review);
+            if (!postSucceeded)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request: Invalid review");
+            return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> Edit(int id)
         {
-            return null;
+            var review = await _apiProxy.GetReviewByIdAsync(id);
+            if(review == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request: Review not found");
+            return View(review);
         }
 
         public async Task<ActionResult> Edit(int id, Review review)
         {
-            return null;
+            var putSucceeded = await _apiProxy.PutReviewAsync(id, review);
+            if (!putSucceeded)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request: Invalid review");
+            return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> Delete(int id)
