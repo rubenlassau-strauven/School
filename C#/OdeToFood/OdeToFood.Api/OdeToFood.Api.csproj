@@ -249,7 +249,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RestaurantsController.cs" />
-    <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -319,6 +319,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\RestaurantDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -332,6 +334,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OdeToFood.Business\OdeToFood.Business.csproj">
+      <Project>{59BC9E70-B615-4327-B6CE-23FC33B67C2D}</Project>
+      <Name>OdeToFood.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OdeToFood.Data\OdeToFood.Data.csproj">
       <Project>{00BA7D7C-5B92-47DC-9092-9C7160470EEA}</Project>
       <Name>OdeToFood.Data</Name>

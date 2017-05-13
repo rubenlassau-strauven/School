@@ -104,10 +104,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\RestaurantsControllerTests.cs" />
-    <Compile Include="Controllers\ReviewControllerTests.cs" />
+    <Compile Include="Controllers\ReviewsControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\ValuesControllerTest.cs" />
+    <Compile Include="Utilities\RestaurantBuilder.cs" />
+    <Compile Include="Utilities\ReviewBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
@@ -119,6 +121,10 @@
     <ProjectReference Include="..\OdeToFood.Api\OdeToFood.Api.csproj">
       <Project>{9C8D7411-58A2-4848-967D-FDFF1B29FA3D}</Project>
       <Name>OdeToFood.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OdeToFood.Business\OdeToFood.Business.csproj">
+      <Project>{59BC9E70-B615-4327-B6CE-23FC33B67C2D}</Project>
+      <Name>OdeToFood.Business</Name>
     </ProjectReference>
     <ProjectReference Include="..\OdeToFood.Data\OdeToFood.Data.csproj">
       <Project>{00BA7D7C-5B92-47DC-9092-9C7160470EEA}</Project>

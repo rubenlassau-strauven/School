@@ -1,0 +1,17 @@
+﻿@using MusicStore.Extensions
+@model MusicStore.Data.AlbumViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@Html.SubTitle("Details")
+
+<div>
+    <h4>Album</h4>
+    <hr />
+    @Html.Partial("_Album");
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

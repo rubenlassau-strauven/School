@@ -1,0 +1,32 @@
+﻿@using MusicStore.Extensions
+@model IEnumerable<MusicStore.Data.DomainClasses.Album>
+
+@{
+    ViewBag.Title = "Browse";
+}
+
+@Html.SubTitle($"Browse {@ViewBag.Genre} {@Model.Count()}")
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Artist)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.Title,"Details", new {id = item.Id})
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Artist)
+        </td>
+    </tr>
+}
+
+</table>
