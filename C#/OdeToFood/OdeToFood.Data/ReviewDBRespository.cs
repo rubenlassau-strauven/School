@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -17,14 +18,16 @@ namespace OdeToFood.Data
             _context = context;
         }
 
-        public Task<IEnumerable<Review>> GetAllAsync()
+        public Task<List<Review>> GetAllAsync()
         {
-            return new Task<IEnumerable<Review>>(() => _context.Reviews.ToList());
+            return _context.Reviews.ToListAsync();
+            //return new Task<IEnumerable<Review>>(() => _context.Reviews.ToListAsync().Result);
         }
 
         public Task<Review> GetAsync(int id)
         {
-            return new Task<Review>(() => _context.Reviews.ToList().Find(r => r.Id == id));
+            return _context.Reviews.FirstOrDefaultAsync(r => r.Id == id);
+            //return new Task<Review>(() => _context.Reviews.ToList().Find(r => r.Id == id));
         }
 
         public Task<Review> AddAsync(Review review)

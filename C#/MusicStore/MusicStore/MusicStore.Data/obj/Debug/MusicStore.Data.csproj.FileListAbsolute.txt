@@ -1,0 +1,5 @@
+C:\Users\11501537\Desktop\School\2e Jaar\Semester 2\Programming Advanced\C#\workspace\MVC\MusicStore\MusicStore.Data\bin\Debug\MusicStore.Data.dll
+C:\Users\11501537\Desktop\School\2e Jaar\Semester 2\Programming Advanced\C#\workspace\MVC\MusicStore\MusicStore.Data\bin\Debug\MusicStore.Data.pdb
+C:\Users\11501537\Desktop\School\2e Jaar\Semester 2\Programming Advanced\C#\workspace\MVC\MusicStore\MusicStore.Data\obj\Debug\MusicStore.Data.dll
+C:\Users\11501537\Desktop\School\2e Jaar\Semester 2\Programming Advanced\C#\workspace\MVC\MusicStore\MusicStore.Data\obj\Debug\MusicStore.Data.pdb
+C:\Users\11501537\Desktop\School\2e Jaar\Semester 2\Programming Advanced\C#\workspace\MVC\MusicStore\MusicStore.Data\obj\Debug\MusicStore.Data.csprojResolveAssemblyReference.cache

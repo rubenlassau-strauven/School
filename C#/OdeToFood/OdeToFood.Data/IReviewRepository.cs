@@ -11,7 +11,7 @@ namespace OdeToFood.Data
     {
         //alle namen eindigen met Async
         //alle methodes geven een Task terug
-        Task<IEnumerable<Review>> GetAllAsync();
+        Task<List<Review>> GetAllAsync();
         Task<Review> GetAsync(int id);
         Task<Review> AddAsync(Review review);
         Task<Review> UpdateAync(Review review);
