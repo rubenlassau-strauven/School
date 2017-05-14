@@ -85,7 +85,10 @@ namespace OdeToFood.Api.Controllers
 
         public async Task<ActionResult> Delete(int id)
         {
-            return null;
+            var deleteSucceeded = await _apiProxy.DeleteReviewAsync(id);
+            if (!deleteSucceeded)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request: Review not found");
+            return RedirectToAction("Index");
         }
 
     }
