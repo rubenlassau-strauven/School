@@ -155,12 +155,12 @@ namespace OdeToFood.Api.Tests.Controllers
                 .Returns(Task.FromResult<bool>(false));
 
             //Act
-            var redirectResult = _controller.Create(new Review()).Result as HttpStatusCodeResult;
+            var actionresult = _controller.Create(new Review()).Result as HttpStatusCodeResult;
 
             //Assert
-            Assert.That(redirectResult, Is.Not.Null);
-            Assert.That(redirectResult.StatusCode, Is.EqualTo(400));
-            Assert.That(redirectResult.StatusDescription, Is.EqualTo("Bad Request: Invalid review"));
+            Assert.That(actionresult, Is.Not.Null);
+            Assert.That(actionresult.StatusCode, Is.EqualTo(400));
+            Assert.That(actionresult.StatusDescription, Is.EqualTo("Bad Request: Invalid review"));
         }
 
         [Test]
@@ -186,12 +186,12 @@ namespace OdeToFood.Api.Tests.Controllers
             _controller._apiProxyMock.Setup(proxy => proxy.GetReviewByIdAsync(It.IsAny<int>())).Returns(Task.FromResult<Review>(null));
 
             //Act
-            var viewResult = _controller.Edit(new Random().Next(1,int.MaxValue)).Result as HttpStatusCodeResult;
+            var actionresult = _controller.Edit(new Random().Next(1,int.MaxValue)).Result as HttpStatusCodeResult;
 
             //Assert
-            Assert.That(viewResult, Is.Not.Null);
-            Assert.That(viewResult.StatusCode, Is.EqualTo(400));
-            Assert.That(viewResult.StatusDescription, Is.EqualTo("Bad Request: Review not found"));
+            Assert.That(actionresult, Is.Not.Null);
+            Assert.That(actionresult.StatusCode, Is.EqualTo(400));
+            Assert.That(actionresult.StatusDescription, Is.EqualTo("Bad Request: Review not found"));
             _controller._apiProxyMock.Verify(proxy => proxy.GetReviewByIdAsync(It.IsAny<int>()), Times.Once);
         }
 
@@ -221,16 +221,48 @@ namespace OdeToFood.Api.Tests.Controllers
                 .Returns(Task.FromResult<bool>(false));
 
             //Act
-            var redirectResult = _controller.Edit(new Random().Next(1,int.MaxValue), new Review()).Result as HttpStatusCodeResult;
+            var actionresult = _controller.Edit(new Random().Next(1,int.MaxValue), new Review()).Result as HttpStatusCodeResult;
 
             //Assert
-            Assert.That(redirectResult, Is.Not.Null);
-            Assert.That(redirectResult.StatusCode, Is.EqualTo(400));
-            Assert.That(redirectResult.StatusDescription, Is.EqualTo("Bad Request: Invalid review"));
+            Assert.That(actionresult, Is.Not.Null);
+            Assert.That(actionresult.StatusCode, Is.EqualTo(400));
+            Assert.That(actionresult.StatusDescription, Is.EqualTo("Bad Request: Invalid review"));
             _controller._apiProxyMock.Verify(proxy => proxy.PutReviewAsync(It.IsAny<int>(), It.IsAny<Review>()), Times.Once);
         }
 
-        // TODO: Tests for delete method
+        [Test]
+        public void Delete_ValidId_ReturnsRedirectToRouteResult()
+        {
+            //Arrange
+            _controller._apiProxyMock.Setup(proxy => proxy.DeleteReviewAsync(It.IsAny<int>()))
+                .Returns(Task.FromResult<bool>(true));
+
+            //Act
+            var redirectResult = _controller.Delete(new Random().Next(1, int.MaxValue)).Result as RedirectToRouteResult;
+
+            //Assert
+            Assert.That(redirectResult, Is.Not.Null);
+            Assert.That(redirectResult.Permanent, Is.False);
+            Assert.That(redirectResult.RouteValues["Action"], Is.EqualTo("Index"));
+            _controller._apiProxyMock.Verify(proxy => proxy.DeleteReviewAsync(It.IsAny<int>()), Times.Once());
+        }
+
+        [Test]
+        public void Delete_InvalidId_ReturnsBadRequest()
+        {
+            //Arrange
+            _controller._apiProxyMock.Setup(proxy => proxy.DeleteReviewAsync(It.IsAny<int>()))
+                .Returns(Task.FromResult<bool>(false));
+
+            //Act
+            var actionresult = _controller.Delete(new Random().Next(1, int.MaxValue)).Result as HttpStatusCodeResult;
+
+            //Assert
+            Assert.That(actionresult, Is.Not.Null);
+            Assert.That(actionresult.StatusCode, Is.EqualTo(400));
+            Assert.That(actionresult.StatusDescription, Is.EqualTo("Bad Request: Review not found"));
+            _controller._apiProxyMock.Verify(proxy => proxy.DeleteReviewAsync(It.IsAny<int>()), Times.Once);
+        }
 
         private class TestableHomeController : HomeController
         {
