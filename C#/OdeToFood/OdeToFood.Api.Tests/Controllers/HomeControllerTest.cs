@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NUnit.Framework;
@@ -39,26 +40,27 @@ namespace OdeToFood.Api.Tests.Controllers
             //Assert
             Assert.That(viewResult, Is.Not.Null);
             Assert.That(viewResult.ViewBag.LastVisit, Is.EqualTo("Never"));
-            Assert.That(_controller._httpCookieCollection["LastVisited"], Is.Not.Null);
-            Assert.That(_controller._httpCookieCollection["LastVisited"].Value, Is.Not.Null);
+            Assert.That(_controller.Response.Cookies["LastVisited"], Is.Not.Null);
+            Assert.That(_controller.Response.Cookies["LastVisited"].Value, Is.Not.Null);
         }
 
         [Test]
         public void About_SecondVisit_ReturnsViewWithLastVisitedDateAndSavesNewVisitToACookie()
         {
             //Arrange
+            //TODO: Mock the Request to contain a Cookie in it's collection
 
             //Act
             _controller.About();
-            var lastVisit = _controller._httpCookieCollection["LastVisited"].Value;
+            var lastVisit = _controller.Response.Cookies["LastVisited"].Value;
             var secondVisit = _controller.About() as ViewResult;
 
             //Assert
             Assert.That(secondVisit, Is.Not.Null);
             Assert.That(secondVisit.ViewBag.LastVisit, Is.EqualTo(lastVisit));
-            Assert.That(_controller._httpCookieCollection["LastVisited"], Is.Not.Null);
-            Assert.That(_controller._httpCookieCollection["LastVisited"].Value, Is.Not.Null);
-            Assert.That(_controller._httpCookieCollection.Count, Is.EqualTo(1));
+            Assert.That(_controller.Response.Cookies["LastVisited"], Is.Not.Null);
+            Assert.That(_controller.Response.Cookies["LastVisited"].Value, Is.Not.Null);
+            Assert.That(_controller.Response.Cookies.Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -233,10 +235,19 @@ namespace OdeToFood.Api.Tests.Controllers
         private class TestableHomeController : HomeController
         {
             public Mock<IApiProxy> _apiProxyMock { get; set; }
+            private Mock<HttpContextBase> context = new Mock<HttpContextBase>();
+            private Mock<HttpRequestBase> request = new Mock<HttpRequestBase>();
+            private Mock<HttpResponseBase> response = new Mock<HttpResponseBase>();
+
 
             private TestableHomeController(Mock<IApiProxy> _ApiProxyMock) : base (_ApiProxyMock.Object)
             {
                 this._apiProxyMock = _ApiProxyMock;
+                context.Setup(c => c.Request).Returns(request.Object);
+                context.Setup(c => c.Response).Returns(response.Object);
+                context.Setup(c => c.Request.Cookies).Returns(new HttpCookieCollection());
+                context.Setup(c => c.Response.Cookies).Returns(new HttpCookieCollection());
+                this.ControllerContext = new ControllerContext(context.Object, new RouteData(), this);
             }
 
             public static TestableHomeController CreateInstance()

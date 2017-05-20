@@ -13,29 +13,19 @@ namespace OdeToFood.Api.Controllers
 {
     public class HomeController : Controller
     {
-        public HttpCookieCollection _httpCookieCollection;
         public IApiProxy _apiProxy;
 
         public HomeController(IApiProxy _apiProxy)
         {
-            this._httpCookieCollection = new HttpCookieCollection();
             this._apiProxy = _apiProxy;
         }
 
         public ActionResult About()
         {
-            if (_httpCookieCollection["LastVisited"] == null)
-            {
-                ViewBag.LastVisit = "Never";
-                HttpCookie lastVisited = new HttpCookie("LastVisited");
-                lastVisited.Value = DateTime.Now.ToString();
-                _httpCookieCollection.Add(lastVisited);
-            }
-            else
-            {
-                ViewBag.LastVisit = _httpCookieCollection["LastVisited"].Value;
-                _httpCookieCollection["LastVisited"].Value = DateTime.Now.ToString();
-            }
+            ViewBag.LastVisit = "Never";
+            HttpCookie lastVisited = new HttpCookie("LastVisited");
+            lastVisited.Value = DateTime.Now.ToString();
+            Response.Cookies.Add(lastVisited);
             return View("About");
         }
 
@@ -70,7 +60,7 @@ namespace OdeToFood.Api.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var review = await _apiProxy.GetReviewByIdAsync(id);
-            if(review == null)
+            if (review == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request: Review not found");
             return View(review);
         }
