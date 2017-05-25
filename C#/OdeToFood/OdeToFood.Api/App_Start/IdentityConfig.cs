@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using OdeToFood.Api.Models;
+using OdeToFood.Data.DomainClasses;
 
 namespace OdeToFood.Api
 {

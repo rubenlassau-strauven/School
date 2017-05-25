@@ -19,8 +19,8 @@ namespace OdeToFood.Api
             container.Register<OdeToFoodContext>(() => new OdeToFoodContext(), Lifestyle.Scoped);
             container.Register<IRestaurantRepository, RestaurantDbRepository>(Lifestyle.Scoped);
             container.Register<IReviewRepository, ReviewDBRespository>(Lifestyle.Scoped);
-            var uri = "http://localhost:60968";
-            container.Register<IApiProxy>(() => new ApiProxy(uri), Lifestyle.Singleton);
+            container.Register<IApiProxy>(() => new ApiProxy("http://localhost:60968"), Lifestyle.Singleton);
+            var result = container.GetInstance(typeof(IApiProxy));
             container.Verify();
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
         }

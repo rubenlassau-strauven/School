@@ -24,3 +24,7 @@ C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Business\bin\De
 C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Business\obj\Debug\OdeToFood.Business.csprojResolveAssemblyReference.cache
 C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Business\obj\Debug\OdeToFood.Business.dll
 C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Business\obj\Debug\OdeToFood.Business.pdb
+C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Business\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Business\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Business\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Business\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml

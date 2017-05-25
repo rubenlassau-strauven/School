@@ -16,6 +16,7 @@ using Microsoft.Owin.Security.OAuth;
 using OdeToFood.Api.Models;
 using OdeToFood.Api.Providers;
 using OdeToFood.Api.Results;
+using OdeToFood.Data.DomainClasses;
 
 namespace OdeToFood.Api.Controllers
 {
@@ -321,16 +322,17 @@ namespace OdeToFood.Api.Controllers
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model, ApplicationDbContext context)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email};
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+            await UserManager.AddToRoleAsync(user.Id, "User");
 
             if (!result.Succeeded)
             {

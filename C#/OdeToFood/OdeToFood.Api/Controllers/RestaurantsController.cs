@@ -11,6 +11,7 @@ using OdeToFood.Data.DomainClasses;
 namespace OdeToFood.Api.Controllers
 {
     [RoutePrefix("api/Restaurants")]
+    [Authorize(Roles = "User")]
     public class RestaurantsController : ApiController
     {
         private IRestaurantRepository _restaurantRepository;
