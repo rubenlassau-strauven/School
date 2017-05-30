@@ -15,7 +15,7 @@ namespace OdeToFood.Business
 
         public ApiProxy(string baseUrl)
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri(baseUrl)};
+            _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:60968/")};
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

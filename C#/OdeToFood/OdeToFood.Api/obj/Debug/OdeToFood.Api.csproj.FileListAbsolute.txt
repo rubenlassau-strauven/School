@@ -296,3 +296,7 @@ C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Api\bin\System.
 C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Api\obj\Debug\OdeToFood.Api.csprojResolveAssemblyReference.cache
 C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Api\obj\Debug\OdeToFood.Api.dll
 C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Api\obj\Debug\OdeToFood.Api.pdb
+C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Api\bin\SimpleInjector.Integration.Web.dll
+C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Api\bin\SimpleInjector.Integration.Web.Mvc.dll
+C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Api\bin\SimpleInjector.Integration.Web.xml
+C:\Users\11501537\Documents\GitHub\School\C#\OdeToFood\OdeToFood.Api\bin\SimpleInjector.Integration.Web.Mvc.xml
