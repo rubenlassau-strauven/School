@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
 using System.Web.Http.Results;
-using System.Web.Http.Routing;
-using Castle.Core.Internal;
 using Moq;
 using NUnit.Framework;
 using OdeToFood.Api.Controllers;

@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -322,7 +321,7 @@ namespace OdeToFood.Api.Controllers
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model, ApplicationDbContext context)
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model, IdentityDbContext context)
         {
             if (!ModelState.IsValid)
             {
@@ -331,12 +330,18 @@ namespace OdeToFood.Api.Controllers
 
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email};
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-            await UserManager.AddToRoleAsync(user.Id, "User");
+            var userResult = await UserManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            if (!userResult.Succeeded)
             {
-                return GetErrorResult(result);
+                return GetErrorResult(userResult);
+            }
+
+            var roleResult = await UserManager.AddToRoleAsync(user.Id, "User");
+
+            if (!roleResult.Succeeded)
+            {
+                return GetErrorResult(roleResult);
             }
 
             return Ok();

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NUnit.Framework;
-using OdeToFood.Api;
 using OdeToFood.Api.Controllers;
 using OdeToFood.Api.Tests.Utilities;
 using OdeToFood.Business;
@@ -71,7 +67,7 @@ namespace OdeToFood.Api.Tests.Controllers
                 reviewBuilder.WithId().Build()
             };
             _controller._apiProxyMock.Setup(proxy => proxy.GetReviewsAsync())
-                .Returns(Task.FromResult<IEnumerable<Review>>(reviews));
+                .Returns(Task.FromResult<IEnumerable<Review>>(reviews));        //ReturnsAsync can also be used
 
             //Act
             var viewResult = _controller.Index().Result as ViewResult;

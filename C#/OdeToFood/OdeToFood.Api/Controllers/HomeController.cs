@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http.Results;
 using System.Web.Mvc;
 using OdeToFood.Business;
 using OdeToFood.Data.DomainClasses;
@@ -20,6 +17,7 @@ namespace OdeToFood.Api.Controllers
         public HomeController(IApiProxy _apiProxy)
         {
             this._apiProxy = _apiProxy;
+            _apiProxy.RegisterAsDummyUserAndUseBearerToken();
         }
 
         public ActionResult About()
