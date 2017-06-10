@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http.Results;
 using System.Web.Mvc;
 using OdeToFood.Business;
 using OdeToFood.Data.DomainClasses;
@@ -14,18 +11,21 @@ namespace OdeToFood.Api.Controllers
     public class HomeController : Controller
     {
         public IApiProxy _apiProxy;
+        public const string LAST_VISIT_COOKIE_NAME = "LastVisited";
+        public const string NEVER_VISITED_COOKIE_VALUE = "Never";
 
         public HomeController(IApiProxy _apiProxy)
         {
             this._apiProxy = _apiProxy;
+            _apiProxy.RegisterAsDummyUserAndUseBearerToken();
         }
 
         public ActionResult About()
-        {
-            ViewBag.LastVisit = "Never";
-            HttpCookie lastVisited = new HttpCookie("LastVisited");
+        {        
+            ViewBag.LastVisit = Request.Cookies[LAST_VISIT_COOKIE_NAME] == null ? NEVER_VISITED_COOKIE_VALUE : Request.Cookies[LAST_VISIT_COOKIE_NAME].Value;
+            HttpCookie lastVisited = new HttpCookie(LAST_VISIT_COOKIE_NAME);
             lastVisited.Value = DateTime.Now.ToString();
-            Response.Cookies.Add(lastVisited);
+            Response.Cookies.Set(lastVisited);
             return View("About");
         }
 

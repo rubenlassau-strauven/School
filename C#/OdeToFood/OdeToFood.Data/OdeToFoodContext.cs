@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using OdeToFood.Data.DomainClasses;
 
 namespace OdeToFood.Data
 {
-    public class OdeToFoodContext : DbContext
+    public class OdeToFoodContext : IdentityDbContext<ApplicationUser>
     {
         public OdeToFoodContext() : base("OdeToFoodContext") { }
         public DbSet<Restaurant> Restaurants { get; set; }

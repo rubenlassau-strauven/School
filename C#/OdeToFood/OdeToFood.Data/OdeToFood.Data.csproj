@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainClasses\ApplicationUser.cs" />
     <Compile Include="DomainClasses\Restaurant.cs" />
     <Compile Include="DomainClasses\Review.cs" />
     <Compile Include="IRestaurantRepository.cs" />

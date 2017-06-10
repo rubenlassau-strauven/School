@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NUnit.Framework;
-using OdeToFood.Api;
 using OdeToFood.Api.Controllers;
 using OdeToFood.Api.Tests.Utilities;
 using OdeToFood.Business;
@@ -39,28 +35,25 @@ namespace OdeToFood.Api.Tests.Controllers
 
             //Assert
             Assert.That(viewResult, Is.Not.Null);
-            Assert.That(viewResult.ViewBag.LastVisit, Is.EqualTo("Never"));
-            Assert.That(_controller.Response.Cookies["LastVisited"], Is.Not.Null);
-            Assert.That(_controller.Response.Cookies["LastVisited"].Value, Is.Not.Null);
+            Assert.That(viewResult.ViewBag.LastVisit, Is.EqualTo(HomeController.NEVER_VISITED_COOKIE_VALUE));
+            Assert.That(_controller.Response.Cookies[HomeController.LAST_VISIT_COOKIE_NAME].Value, Is.Not.Null);
         }
 
         [Test]
         public void About_SecondVisit_ReturnsViewWithLastVisitedDateAndSavesNewVisitToACookie()
         {
             //Arrange
-            //TODO: Mock the Request to contain a Cookie in it's collection
+            var cookie = new HttpCookie(HomeController.LAST_VISIT_COOKIE_NAME);
+            cookie.Value = DateTime.Now.ToString();
+            _controller.Request.Cookies.Add(cookie);
 
             //Act
-            _controller.About();
-            var lastVisit = _controller.Response.Cookies["LastVisited"].Value;
             var secondVisit = _controller.About() as ViewResult;
 
             //Assert
             Assert.That(secondVisit, Is.Not.Null);
-            Assert.That(secondVisit.ViewBag.LastVisit, Is.EqualTo(lastVisit));
-            Assert.That(_controller.Response.Cookies["LastVisited"], Is.Not.Null);
-            Assert.That(_controller.Response.Cookies["LastVisited"].Value, Is.Not.Null);
-            Assert.That(_controller.Response.Cookies.Count, Is.EqualTo(1));
+            Assert.That(secondVisit.ViewBag.LastVisit, Is.EqualTo(cookie.Value));
+            Assert.That(_controller.Response.Cookies[HomeController.LAST_VISIT_COOKIE_NAME].Value, Is.Not.Null);
         }
 
         [Test]
@@ -74,7 +67,7 @@ namespace OdeToFood.Api.Tests.Controllers
                 reviewBuilder.WithId().Build()
             };
             _controller._apiProxyMock.Setup(proxy => proxy.GetReviewsAsync())
-                .Returns(Task.FromResult<IEnumerable<Review>>(reviews));
+                .Returns(Task.FromResult<IEnumerable<Review>>(reviews));        //ReturnsAsync can also be used
 
             //Act
             var viewResult = _controller.Index().Result as ViewResult;

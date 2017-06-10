@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Win32;
+using System.Web;
 using Newtonsoft.Json;
 using OdeToFood.Data.DomainClasses;
 
@@ -13,13 +11,13 @@ namespace OdeToFood.Business
 {
     public class ApiProxy : IApiProxy
     {
-        private HttpClient _client { get;}
+        private HttpClient _httpClient { get;}
 
         public ApiProxy(string baseUrl)
         {
-            _client = new HttpClient { BaseAddress = new Uri(baseUrl)};
-            _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:60968/")};
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         private class User
@@ -40,9 +38,9 @@ namespace OdeToFood.Business
             };
 
             var registerUrl = "api/account/register";
-            var response = _client.PostAsJsonAsync(registerUrl, dummyUser).Result;
+            var response = _httpClient.PostAsJsonAsync(registerUrl, dummyUser).Result;
             var token = GetToken(dummyUser.Email, dummyUser.Password);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         private string GetToken(string username, string password)
@@ -56,7 +54,7 @@ namespace OdeToFood.Business
 
             var content = new FormUrlEncodedContent(pairs);
 
-            var response = _client.PostAsync("/Token", content).Result;
+            var response = _httpClient.PostAsync("/Token", content).Result;
             var jsonString = response.Content.ReadAsStringAsync().Result;
 
             var tokenDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonString);
@@ -67,20 +65,21 @@ namespace OdeToFood.Business
         {
             var reviewsUrl = "api/Reviews";
 
-            var response = await _client.GetAsync(reviewsUrl);
+            var response = await _httpClient.GetAsync(reviewsUrl);
             if (response.IsSuccessStatusCode)
             {
                 var reviews = await response.Content.ReadAsAsync<IEnumerable<Review>>();
                 return reviews;
             }
-            return null;
+            //return null;
+            throw new HttpException(response.ReasonPhrase);
         }
 
         public async Task<Restaurant> GetRestaurantByIdAsync(int id)
         {
             var restaurantUrl = $"api/Restaurants/{id}";
 
-            var response = await _client.GetAsync(restaurantUrl);
+            var response = await _httpClient.GetAsync(restaurantUrl);
             if (response.IsSuccessStatusCode)
             {
                 var restaurant = await response.Content.ReadAsAsync<Restaurant>();
@@ -93,7 +92,7 @@ namespace OdeToFood.Business
         {
             var reviewUrl = $"api/Reviews/{id}";
 
-            var response = await _client.GetAsync(reviewUrl);
+            var response = await _httpClient.GetAsync(reviewUrl);
             if (response.IsSuccessStatusCode)
             {
                 var review = await response.Content.ReadAsAsync<Review>();
@@ -107,7 +106,7 @@ namespace OdeToFood.Business
         {
             var reviewUrl = $"api/Reviews/{id}";
 
-            var response = await _client.PutAsJsonAsync(reviewUrl, review);
+            var response = await _httpClient.PutAsJsonAsync(reviewUrl, review);
             return response.IsSuccessStatusCode;
         }
 
@@ -115,7 +114,7 @@ namespace OdeToFood.Business
         {
             var reviewUrl = $"api/Reviews";
 
-            var response = await _client.PostAsJsonAsync(reviewUrl, review);
+            var response = await _httpClient.PostAsJsonAsync(reviewUrl, review);
             return response.IsSuccessStatusCode;
         }
 
@@ -123,7 +122,7 @@ namespace OdeToFood.Business
         { 
             var reviewUrl = $"api/Reviews/{id}";
 
-            var response = await _client.DeleteAsync(reviewUrl);
+            var response = await _httpClient.DeleteAsync(reviewUrl);
             return response.IsSuccessStatusCode;
         }
     }
