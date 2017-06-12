@@ -36,9 +36,10 @@ namespace OdeToFood.Data
 
         public async Task<Review> PutAsync(Review review)
         {
-            var original = _context.Restaurants.FindAsync(review.Id);
+            var original = _context.Reviews.Find(review.Id);
             var entry = _context.Entry(original);
             entry.CurrentValues.SetValues(review);
+
             await _context.SaveChangesAsync();
             return review;
         }

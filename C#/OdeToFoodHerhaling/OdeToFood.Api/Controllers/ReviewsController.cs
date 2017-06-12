@@ -11,6 +11,7 @@ using OdeToFood.Data.DomainClasses;
 
 namespace OdeToFood.Api.Controllers
 {
+    [Authorize(Roles = "User")]
     public class ReviewsController : ApiController
     {
         private IReviewRepository _repository;
@@ -51,7 +52,7 @@ namespace OdeToFood.Api.Controllers
                 return BadRequest();
             if (await _repository.GetAsync(id) == null)
                 return NotFound();
-            var updatedReview = _repository.PutAsync(review);
+            var updatedReview = await _repository.PutAsync(review);
             return Ok();
         }
 
