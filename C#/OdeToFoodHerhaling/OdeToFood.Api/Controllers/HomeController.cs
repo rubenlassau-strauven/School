@@ -18,6 +18,7 @@ namespace OdeToFood.Api.Controllers
         public HomeController(IApiProxy apiProxy)
         {
             _apiProxy = apiProxy;
+            _apiProxy.RegisterAsDummyUserAndUseBearerToken();
         }
 
         public ActionResult About()
@@ -33,8 +34,7 @@ namespace OdeToFood.Api.Controllers
 
         [HttpGet]
         public async Task<ActionResult> Index()
-       {
-            _apiProxy.RegisterAsDummyUserAndUseBearerToken();
+       {        
             var reviews = await _apiProxy.GetReviewsAsync();
             return View(reviews);
         }
@@ -43,8 +43,6 @@ namespace OdeToFood.Api.Controllers
         public async Task<ActionResult> RestaurantDetails(int id)
         {
             var restaurant = await _apiProxy.GetRestaurantByIdAsync(id);
-            if (restaurant == null)
-                return HttpNotFound();
             return View(restaurant);
         }
 
@@ -58,9 +56,7 @@ namespace OdeToFood.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(Review review)
         {
-            var postSucceeded = await _apiProxy.PostReviewAsync(review);
-            if (!postSucceeded)
-                return new HttpStatusCodeResult(400);
+            await _apiProxy.PostReviewAsync(review);
             return RedirectToAction("Index");
         }
 
@@ -68,8 +64,6 @@ namespace OdeToFood.Api.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var review = await _apiProxy.GetReviewByIdAsync(id);
-            if (review == null)
-                return HttpNotFound();
             ViewBag.Title = "Edit Review";
             return View(review);
         }
@@ -77,10 +71,6 @@ namespace OdeToFood.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(int id, Review review)
         {
-            if (id != review.Id || !ModelState.IsValid)
-                return new HttpStatusCodeResult(400);
-            if (_apiProxy.GetReviewByIdAsync(id).Result == null)
-                return HttpNotFound();
             var updateSucceeded = _apiProxy.PutReviewAsync(id, review);
             return RedirectToAction("Index");
         }
@@ -88,8 +78,6 @@ namespace OdeToFood.Api.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             var deleteSucceeded = await _apiProxy.DeleteReviewAsync(id);
-            if (!deleteSucceeded)
-                return HttpNotFound();
             return RedirectToAction("Index");
         }
     }
